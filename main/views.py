@@ -5,6 +5,7 @@ from django.http import HttpResponse
 # Create your views here.
 def mainpage(request):
     if request.user.is_authenticated():
-        return HttpResponse('Welcome to the main page, {}!'.format(request.user))
+        cxt = {'cxt': 'Welcome to the main page, {}!'.format(request.user)}
     else:
-        return HttpResponse("Dr. Livingstone, I presume")
+        cxt = {'cxt': 'Dr. Livingstone, I presume?'}
+    return render(request, context=cxt, template_name='main/main.html')
