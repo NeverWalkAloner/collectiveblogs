@@ -1,9 +1,18 @@
+{% load staticfiles %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
 <body>
-
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Logged out</h3>
+    </div>
+    <div class="panel-body">
+        <p>You can return to the <a href="{% url 'main:main' %}">main page</a>.<p></p>
+    </div>
+</div>
 </body>
 </html>
