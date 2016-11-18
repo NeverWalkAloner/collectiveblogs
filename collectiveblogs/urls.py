@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout, name='logout'),
     url(r'^', include('main.urls', namespace='main')),
+    url('^users/', include('users.urls', namespace='users')),
 ]

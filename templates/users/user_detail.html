@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <p>Login: {{ user.username }}</p>
+    <p>First name: {{ user.first_name }}</p>
+    <p>Last name: {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Date joined: {{ user.date_joined|date }}</p>
+    <p>Last login: {{ user.last_login|date }}</p>
+{% endblock %}
