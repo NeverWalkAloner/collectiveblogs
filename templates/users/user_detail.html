@@ -2,10 +2,16 @@
 {% load staticfiles %}
 {% block title %}{{ user.username }}{% endblock %}
 {% block content %}
-    <p>Login: {{ user.username }}</p>
-    <p>First name: {{ user.first_name }}</p>
-    <p>Last name: {{ user.last_name }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Date joined: {{ user.date_joined|date }}</p>
-    <p>Last login: {{ user.last_login|date }}</p>
+    <h2 style="padding: 10px">{{ user.username }}</h2></p>
+    <p>
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active"><a href="#">Профиль</a></li>
+      <li role="presentation"><a href="#">Статьи</a></li>
+    </ul>
+    </p>
+    <p style="padding: 10px"><b>Имя:</b> {{ user.first_name }}</p>
+    <p style="padding: 10px"><b>Фамилия:</b> {{ user.last_name }}</p>
+    <p style="padding: 10px"><b>Электронная почта:</b> {{ user.email }}</p>
+    <p style="padding: 10px"><b>Дата регистрации:</b> {{ user.date_joined|date }}</p>
+    <p style="padding: 10px"><b>Был на сайте:</b> {{ user.last_login|date:'j F Y в H:m:s' }}</p>
 {% endblock %}
