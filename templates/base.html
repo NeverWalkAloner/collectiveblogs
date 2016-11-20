@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Коллективные блоги {% block title %}{% endblock %}</title>
 </head>
 <body>
 <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
@@ -16,7 +16,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Blogs</a>
+      <a class="navbar-brand" href="{% url 'main:main' %}">Блоги</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -24,9 +24,9 @@
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
             <li><a href="{% url 'users:detail' username=user.username %}">{{ user.username }}</a></li>
-            <li><a href="{% url 'logout' %}">Log out</a></li>
+            <li><a href="{% url 'logout' %}">Выйти</a></li>
          {% else %}
-            <li><a href="{% url 'login' %}">Log in</a></li>
+            <li><a href="{% url 'login' %}">Войти</a></li>
          {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->

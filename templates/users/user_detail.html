@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% block title %}{{ user.username }}{% endblock %}
 {% block content %}
     <p>Login: {{ user.username }}</p>
     <p>First name: {{ user.first_name }}</p>
