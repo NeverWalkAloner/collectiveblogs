@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import DetailView
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, RegistrationForm
 
@@ -12,7 +12,8 @@ class UserDetails(DetailView):
     template_name = 'users/user_detail.html'
 
     def get_object(self, queryset=None):
-        return self.request.user
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return user
 
 
 def user_login(request):

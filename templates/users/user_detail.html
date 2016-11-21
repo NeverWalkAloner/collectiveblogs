@@ -6,6 +6,9 @@
     <p>
     <ul class="nav nav-tabs">
       <li role="presentation" class="active"><a href="#">Профиль</a></li>
+      {% if user == request.user %}
+      <li role="presentation"><a href="#">Редактировать профиль</a></li>
+      {% endif %}
       <li role="presentation"><a href="#">Статьи</a></li>
     </ul>
     </p>
