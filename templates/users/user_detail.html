@@ -15,6 +15,7 @@
     <p style="padding: 10px"><b>Имя:</b> {{ user.first_name }}</p>
     <p style="padding: 10px"><b>Фамилия:</b> {{ user.last_name }}</p>
     <p style="padding: 10px"><b>Электронная почта:</b> {{ user.email }}</p>
+    <p style="padding: 10px"><b>О себе:</b> {{ user.profile.about }}</p>
     <p style="padding: 10px"><b>Дата регистрации:</b> {{ user.date_joined|date }}</p>
     <p style="padding: 10px"><b>Был на сайте:</b> {{ user.last_login|date:'j F Y в H:m:s' }}</p>
 {% endblock %}
