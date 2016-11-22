@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+{% block title %}{{ user.username }}{% endblock %}
 {% block content %}
-<div class="col-sm-3 col-sm-offset-4">
+    <h2 style="padding: 10px">{{ user.username }}</h2></p>
+    <p>
+    <ul class="nav nav-tabs">
+      <li role="presentation"><a href="{% url 'users:detail' username=user.username %}">Профиль</a></li>
+      {% if user == request.user %}
+      <li role="presentation" class="active"><a href="{% url 'users:edit' username=user.username %}">Редактировать профиль</a></li>
+      {% endif %}
+      <li role="presentation"><a href="#">Статьи</a></li>
+    </ul>
+    </p>
+    <div class="col-sm-3 col-sm-offset-4">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h3 class="panel-title">{{ title }}</h3>

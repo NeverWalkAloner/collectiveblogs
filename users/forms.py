@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from .models import Profile
 
 
 class LoginForm(forms.Form):
@@ -46,3 +47,15 @@ class RegistrationForm(forms.ModelForm):
         if email_qs.exists():
             raise forms.ValidationError('пользователь с таким email уже зарегистрирован!')
         return email
+
+
+class UserSettingForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+
+class ProfileSettingForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['about',]
