@@ -1,17 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'users/user_base.html' %}
 {% load staticfiles %}
-{% block title %}{{ user.username }}{% endblock %}
-{% block content %}
-    <h2 style="padding: 10px">{{ user.username }}</h2></p>
-    <p>
-    <ul class="nav nav-tabs">
-      <li role="presentation" class="active"><a href="#">Профиль</a></li>
-      {% if user == request.user %}
-      <li role="presentation"><a href="{% url 'users:edit' username=user.username %}">Редактировать профиль</a></li>
-      {% endif %}
-      <li role="presentation"><a href="#">Статьи</a></li>
-    </ul>
-    </p>
+{% block user_view %}
     <p style="padding: 10px"><b>Имя:</b> {{ user.first_name }}</p>
     <p style="padding: 10px"><b>Фамилия:</b> {{ user.last_name }}</p>
     <p style="padding: 10px"><b>Электронная почта:</b> {{ user.email }}</p>

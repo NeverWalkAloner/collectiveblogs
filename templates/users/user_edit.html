@@ -1,32 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'users/user_base.html' %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
-{% block title %}{{ user.username }}{% endblock %}
-{% block content %}
-    <h2 style="padding: 10px">{{ user.username }}</h2></p>
-    <p>
-    <ul class="nav nav-tabs">
-      <li role="presentation"><a href="{% url 'users:detail' username=user.username %}">Профиль</a></li>
-      {% if user == request.user %}
-      <li role="presentation" class="active"><a href="{% url 'users:edit' username=user.username %}">Редактировать профиль</a></li>
-      {% endif %}
-      <li role="presentation"><a href="#">Статьи</a></li>
-    </ul>
-    </p>
+{% block user_view %}
     <div class="col-sm-3 col-sm-offset-4">
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ title }}</h3>
-        </div>
-        <div class="panel-body">
-            <form target="" enctype="multipart/form-data" method="post">
-                {% csrf_token %}
-                {% for form in forms %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ title }}</h3>
+            </div>
+            <div class="panel-body">
+                <form target="" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    {% for form in forms %}
                     {{ form|crispy }}
-                {% endfor %}
-                <input type="submit" class="btn btn-default" value="{{ title }}">
-            </form>
+                    {% endfor %}
+                    <input type="submit" class="btn btn-default" value="{{ title }}">
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

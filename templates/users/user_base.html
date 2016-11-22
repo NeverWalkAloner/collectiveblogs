@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}- {{ user.username }}{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="'row">
+            <div class="col-sm-2">
+                <h2>{{ user.username }}</h2>
+            </div>
+            <div class="col-sm-4">
+                <h2>
+                    <small>Карма:</small>
+                    <button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                    {{ user.profile.karma }}
+                    <button type="button" class="btn btn-danger btn-xs {% if user.profile.karma == 0 %} disabled {% endif %}"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs">
+        {% url 'users:detail' username=user.username as detail_url %}
+        {% url 'users:edit' username=user.username as edit_url %}
+        <li role="presentation" {% if request.get_full_path == detail_url %} class="active"{% endif %}><a href="{% url 'users:detail' username=user.username %}">Профиль</a></li>
+        {% if user == request.user %}
+        <li role="presentation" {% if request.get_full_path == edit_url %} class="active"{% endif %}><a href="{% url 'users:edit' username=user.username %}">Редактировать
+            профиль</a></li>
+        {% endif %}
+        <li role="presentation"><a href="#">Статьи</a></li>
+    </ul>
+    {% block user_view %}
+    {% endblock %}
+{% endblock %}
