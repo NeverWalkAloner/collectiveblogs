@@ -8,3 +8,12 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     about = models.TextField('О себе', blank=True)
     karma = models.PositiveIntegerField(verbose_name='карма', default=0)
+
+    def __str__(self):
+        return self.user.username
+
+
+class KarmaVotes(models.Model):
+    vote_for = models.ForeignKey(Profile, verbose_name='За кого голосовали')
+    vote_from = models.ForeignKey(User, verbose_name='Кто голосовал')
+    vote_result = models.IntegerField(verbose_name='Результат голосования')

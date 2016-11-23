@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import DetailView
+from django.views.generic import UpdateView
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
@@ -16,6 +17,24 @@ class UserDetails(DetailView):
     def get_object(self, queryset=None):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return user
+
+
+class KarmaVote(UpdateView):
+    model = Profile
+    template_name = 'users/user_detail.html'
+    fields = []
+
+    def get_object(self, queryset=None):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return user
+
+    def post(self, request, *args, **kwargs):
+        print('ggfghfhghgf')
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        self.profile = get_object_or_404(Profile, user=user)
+        self.profile.karma += int(request.POST.get('karma', 0))
+        self.profile.save()
+        return redirect('users:detail', username=self.kwargs.get('username'))
 
 
 def user_login(request):
