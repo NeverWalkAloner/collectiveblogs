@@ -13,10 +13,11 @@
     <div class="container-fluid">
         <div class="'row">
             <div class="col-sm-2">
-                <h2>{{ user.username }}</h2>
+                    <img src="{{ user.profile.avatar_url }}" width="50px" height="50px" style="margin-right: 20px;">
+                <h2 style="display: inline; margin-top:0 !important;">{{ user.username }}</h2>
             </div>
             <div class="col-sm-4">
-                <h2>
+                <h2 style="margin-top:0 !important;">
                     <form method="post" target="">
                     {% csrf_token %}
                     <input type="hidden" name="karma" value="1" />

@@ -1,4 +1,5 @@
 # -* coding: utf-8 -*-
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -14,11 +15,19 @@ class Profile(models.Model):
     karma = models.PositiveIntegerField(verbose_name='карма', default=0)
     avatar = models.ImageField(verbose_name='Аватар',
                                upload_to=upload_location,
+                               default='avatars/default.jpg',
                                null=True,
                                blank=True)
 
     def __str__(self):
         return self.user.username
+
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        else:
+            return settings.MEDIA_URL + 'avatars/default.jpg'
 
 
 class KarmaVotes(models.Model):

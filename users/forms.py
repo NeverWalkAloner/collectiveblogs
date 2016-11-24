@@ -58,4 +58,4 @@ class UserSettingForm(forms.ModelForm):
 class ProfileSettingForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['about',]
+        fields = ['about', 'avatar']

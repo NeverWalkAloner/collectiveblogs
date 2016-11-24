@@ -109,11 +109,16 @@ def user_edit(request, username):
     if request.user == user:
         profile = get_object_or_404(Profile, user=user)
         user_form = UserSettingForm(request.POST or None, instance=user)
-        profile_form = ProfileSettingForm(request.POST or None, instance=profile)
+        profile_form = ProfileSettingForm(request.POST or None,
+                                          request.FILES or None,
+                                          instance=profile)
         if user_form.is_valid() and profile_form.is_valid():
             user.first_name = user_form.cleaned_data.get('first_name')
             user.last_name = user_form.cleaned_data.get('last_name')
             profile.about = profile_form.cleaned_data.get('about')
+            if profile_form.cleaned_data.get('avatar'):
+                profile.avatar = profile_form.cleaned_data.get('avatar')
+            print(profile_form.cleaned_data)
             user.save()
             profile.save()
             return redirect('users:detail', username=username)
