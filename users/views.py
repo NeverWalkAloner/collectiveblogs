@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from django.views.generic import UpdateView
 from django.contrib.auth.models import User
 from django.http import Http404
@@ -18,6 +18,13 @@ def karma_valid(user, current_user, karma_value, votes):
         if votes[0].vote_result < 0 and karma_value < 0:
             return False
     return True
+
+
+class UserListView(ListView):
+    model = Profile
+    paginate_by = 2
+    template_name = 'users/user_list.html'
+    context_object_name = 'users_list'
 
 
 class UserView(UpdateView):
@@ -53,9 +60,7 @@ class UserView(UpdateView):
         self.profile.karma += int(request.POST.get('karma', 0))
         if self.profile.karma < 0:
             self.profile.karma = 0
-        print(self.profile.karma)
         self.profile.save()
-        print(self.profile.karma)
         return redirect('users:detail', username=self.kwargs.get('username'))
 
     def get(self, request, *args, **kwargs):
@@ -72,7 +77,6 @@ class UserView(UpdateView):
                 context['enable'] = 'down'
             else:
                 context['enable'] = 'up'
-        print(context)
         return context
 
 
@@ -118,7 +122,6 @@ def user_edit(request, username):
             profile.about = profile_form.cleaned_data.get('about')
             if profile_form.cleaned_data.get('avatar'):
                 profile.avatar = profile_form.cleaned_data.get('avatar')
-            print(profile_form.cleaned_data)
             user.save()
             profile.save()
             return redirect('users:detail', username=username)

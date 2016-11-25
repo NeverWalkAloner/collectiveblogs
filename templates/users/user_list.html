@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}- {{ user.username }}{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>Пользователь</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Пользователь</th>
+                <th>Карма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users_list %}
+            <tr>
+                <td><a href="{% url 'users:detail' username=user.user %}">{{ user.user }}</a></td>
+                <td>{{ user.karma }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+            <div class="text-center">
+            <ul class="pagination">
+                <li>
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li><a href="{% url 'users:list'%}?page=1">1</a></li>
+                <li><a href="{% url 'users:list'%}?page=2">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li>
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+            </div>
+        </nav>
+    </div>
+{% endblock %}
