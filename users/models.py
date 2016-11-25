@@ -22,6 +22,17 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        try:
+            this_record = Profile.objects.get(pk=self.id)
+            if this_record.avatar != self.avatar:
+                this_record.avatar.delete(save=False)
+        except:
+            pass
+        super(Profile, self).save(force_insert=False, force_update=False, using=None,
+             update_fields=None)
+
     @property
     def avatar_url(self):
         if self.avatar:

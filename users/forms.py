@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.forms import ValidationError
 from .models import Profile
 
 
@@ -56,6 +57,17 @@ class UserSettingForm(forms.ModelForm):
 
 
 class ProfileSettingForm(forms.ModelForm):
+    avatar = forms.FileField(widget=forms.ClearableFileInput(),
+                             required=False,
+                             label='Аватар',
+                             max_length=15)
+
+    def clean_avatar(self):
+        av = self.cleaned_data.get('avatar')
+        if av:
+            if av.size > 50 * 1024:
+                raise ValidationError('Файл не должен превышать 50 Кб')
+        return av
     class Meta:
         model = Profile
         fields = ['about', 'avatar']
