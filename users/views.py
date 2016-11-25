@@ -2,6 +2,7 @@
 from django.views.generic import DetailView, ListView
 from django.views.generic import UpdateView
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
@@ -22,9 +23,22 @@ def karma_valid(user, current_user, karma_value, votes):
 
 class UserListView(ListView):
     model = Profile
-    paginate_by = 2
+    paginate_by = 1
     template_name = 'users/user_list.html'
     context_object_name = 'users_list'
+
+    def get(self, request, *args, **kwargs):
+        self.page = int(request.GET.get('page', 1))
+        return super(UserListView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        p = Paginator(self.get_queryset(), self.paginate_by)
+        start = self.page - 2 if self.page - 2 > 0 else 1
+        end = start + 5 if start + 5 <= p.num_pages else p.num_pages + 1
+        start = end - 5 if end - 5 > 0 else 1
+        context['custom_page_range'] = range(start, end)
+        return context
 
 
 class UserView(UpdateView):
