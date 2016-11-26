@@ -23,9 +23,10 @@ def karma_valid(user, current_user, karma_value, votes):
 
 class UserListView(ListView):
     model = Profile
-    paginate_by = 1
+    paginate_by = 3
     template_name = 'users/user_list.html'
     context_object_name = 'users_list'
+    ordering = ['-karma',]
 
     def get(self, request, *args, **kwargs):
         self.page = int(request.GET.get('page', 1))
@@ -38,6 +39,7 @@ class UserListView(ListView):
         end = start + 5 if start + 5 <= p.num_pages else p.num_pages + 1
         start = end - 5 if end - 5 > 0 else 1
         context['custom_page_range'] = range(start, end)
+        context['paginate_by'] = self.paginate_by
         return context
 
 

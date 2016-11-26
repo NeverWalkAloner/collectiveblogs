@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load pageordered %}
+{% load pageordered2 %}
 {% block title %}- {{ user.username }}{% endblock %}
 {% block content %}
     <div class="container">
@@ -7,6 +9,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>Рейтинг</th>
                 <th>Пользователь</th>
                 <th>Карма</th>
             </tr>
@@ -14,6 +17,7 @@
             <tbody>
             {% for user in users_list %}
             <tr>
+                <td>{{ page_obj.number|pageordered:paginate_by|pageordered2:forloop.counter }}</td>
                 <td><a href="{% url 'users:detail' username=user.user %}">{{ user.user }}</a></td>
                 <td>{{ user.karma }}</td>
             </tr>
