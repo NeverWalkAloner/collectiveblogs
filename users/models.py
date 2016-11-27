@@ -26,7 +26,7 @@ class Profile(models.Model):
              update_fields=None):
         try:
             this_record = Profile.objects.get(pk=self.id)
-            if this_record.avatar != self.avatar:
+            if this_record.avatar != self.avatar and this_record.avatar.url != 'avatars/default.jpg':
                 this_record.avatar.delete(save=False)
         except:
             pass
