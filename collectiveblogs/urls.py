@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^logout/$', logout, name='logout'),
     url(r'^', include('main.urls', namespace='main')),
     url('^users/', include('users.urls', namespace='users')),
+    url('^blogs/', include('blogs.urls', namespace='blogs')),
 ]
 
 if settings.DEBUG:
