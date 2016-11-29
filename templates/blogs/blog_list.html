@@ -11,13 +11,21 @@
             <tr>
                 <th>Наименование блога</th>
                 <th>Описание блога</th>
+                <th>Действие</th>
             </tr>
             </thead>
             <tbody>
             {% for blog in blogs_list %}
             <tr>
+                <td>
+                    {{ blog.name }}
+                    <br>
+                    <small>Создатель: <a href="{% url 'users:detail' username=blog.owner %}">{{ blog.owner }}</a></small>
+                </td>
                 <td>{{ blog.name }}</td>
-                <td>{{ blog.name }}</td>
+                <td><button type="button" class="btn btn-success btn-circle" title="Подписаться"><i class="glyphicon glyphicon-ok"></i></button>
+                    <button type="button" class="btn btn-danger btn-circle" title="Отписаться"><i class="glyphicon glyphicon-remove"></i></button>
+                </td>
             </tr>
             {% endfor %}
             </tbody>

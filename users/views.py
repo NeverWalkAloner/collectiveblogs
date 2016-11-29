@@ -4,7 +4,7 @@ from django.views.generic import UpdateView
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, RegistrationForm, UserSettingForm, ProfileSettingForm
 from .models import Profile, KarmaVotes
@@ -40,6 +40,7 @@ class UserListView(ListView):
         start = end - 5 if end - 5 > 0 else 1
         context['custom_page_range'] = range(start, end)
         context['paginate_by'] = self.paginate_by
+        context['model'] = reverse('users:list')
         return context
 
 

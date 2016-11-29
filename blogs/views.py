@@ -1,7 +1,7 @@
-from django.shortcuts import render, reverse
+from django.core.paginator import Paginator
+from django.shortcuts import reverse
 from django.views.generic import ListView, CreateView
 from .models import Blog
-from .forms import BlogForm
 
 
 class BlogsView(ListView):
@@ -11,11 +11,19 @@ class BlogsView(ListView):
     context_object_name = 'blogs_list'
 
     def get(self, request, *args, **kwargs):
-        self.page = request.GET.get('p')
+        self.page = int(request.GET.get('page', 1))
         return super(BlogsView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        return super(BlogsView, self).get_context_data(**kwargs)
+        context = super(BlogsView, self).get_context_data(**kwargs)
+        context['model'] = reverse('blogs:list')
+        context['paginate_by'] = self.paginate_by
+        p = Paginator(self.get_queryset(), self.paginate_by)
+        start = self.page - 2 if self.page - 2 > 0 else 1
+        end = start + 5 if start + 5 <= p.num_pages else p.num_pages + 1
+        start = end - 5 if end - 5 > 0 else 1
+        context['custom_page_range'] = range(start, end)
+        return context
 
 
 class BlogCreateView(CreateView):
@@ -30,5 +38,5 @@ class BlogCreateView(CreateView):
         return context
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.owner = self.request.user
         return super(BlogCreateView, self).form_valid(form)

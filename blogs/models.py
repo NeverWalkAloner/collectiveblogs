@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
 
-unique_validator = RegexValidator(r'[\w-]+', 'Допустимы только символы латинского алфавита и знак -')
+unique_validator = RegexValidator(r'^[a-zA-Z-]+$', 'Допустимы только символы латинского алфавита и знак -')
 
 
 class Blog(models.Model):
@@ -15,11 +15,14 @@ class Blog(models.Model):
                                    max_length=50,
                                    unique=True,
                                    blank=False,
-                                   validators=[unique_validator])
+                                   validators=[unique_validator,])
     owner = models.ForeignKey(User,
                               verbose_name='Создатель блога',
                               blank=True,
                               null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Subscription(models.Model):

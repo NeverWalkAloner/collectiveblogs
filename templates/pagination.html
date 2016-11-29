@@ -3,7 +3,7 @@
         <ul class="pagination">
             <li>
                 {% if page_obj.has_previous %}
-                <a href="{% url 'users:list'%}?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <a href="{{ model }}?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
                 {% else %}
@@ -13,11 +13,11 @@
                 {% endif %}
             </li>
             {% for pn in custom_page_range %}
-            <li {% if page_obj.number == pn %}class="active"{% endif %}> <a href="{% url 'users:list'%}?page={{ pn }}">{{ pn }}</a></li>
+            <li {% if page_obj.number == pn %}class="active"{% endif %}> <a href="{{ model }}?page={{ pn }}">{{ pn }}</a></li>
             {% endfor %}
             <li>
                 {% if page_obj.has_next %}
-                <a href="{% url 'users:list'%}?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <a href="{{ model }}?page={{ page_obj.next_page_number }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
                 {% else %}
