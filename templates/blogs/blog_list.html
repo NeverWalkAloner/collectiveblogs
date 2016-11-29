@@ -1,4 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-Blogs List
+<div class="container">
+        <div class="row">
+        <div class="col-md-6"><h2 style="display: inline; padding-right: 40px;">Блоги</h2></div>
+        <div class="col-md-6 text-right"><sup><a href="{% url 'blogs:create' %}" class="btn btn-default">Добавить блог</a></sup></div>
+        </div>
+        <br>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Наименование блога</th>
+                <th>Описание блога</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for blog in blogs_list %}
+            <tr>
+                <td>{{ blog.name }}</td>
+                <td>{{ blog.name }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include 'pagination.html' %}
+    </div>
 {% endblock %}

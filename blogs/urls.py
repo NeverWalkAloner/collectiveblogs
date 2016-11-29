@@ -1,7 +1,8 @@
 from django.conf.urls import url
-from .views import blog_list
+from .views import BlogsView, BlogCreateView
 
 
 urlpatterns = [
-    url(r'^$', blog_list, name='list'),
+    url(r'^$', BlogsView.as_view(), name='list'),
+    url(r'^create/$', BlogCreateView.as_view(), name='create'),
 ]

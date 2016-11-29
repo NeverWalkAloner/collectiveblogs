@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
@@ -15,6 +16,10 @@ class Blog(models.Model):
                                    unique=True,
                                    blank=False,
                                    validators=[unique_validator])
+    owner = models.ForeignKey(User,
+                              verbose_name='Создатель блога',
+                              blank=True,
+                              null=True)
 
 
 class Subscription(models.Model):
