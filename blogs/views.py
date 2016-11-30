@@ -1,7 +1,8 @@
 from django.core.paginator import Paginator
-from django.shortcuts import reverse
+from django.db.models import Q, Prefetch
+from django.shortcuts import reverse, redirect
 from django.views.generic import ListView, CreateView
-from .models import Blog
+from .models import Blog, Subscription
 
 
 class BlogsView(ListView):
@@ -25,6 +26,22 @@ class BlogsView(ListView):
         context['custom_page_range'] = range(start, end)
         return context
 
+    def get_queryset(self):
+        subscriptions = Subscription.objects.filter(user=self.request.user)
+        blog = Blog.objects.all().prefetch_related(Prefetch('subscription_set', queryset=subscriptions))
+
+        return blog
+
+    def post(self, request, *args, **kwargs):
+        subscription = Subscription.objects.filter(blog_id=request.POST.get('blog'),
+                                                   user=request.user)
+        if not subscription:
+            sub = Subscription(blog_id=request.POST.get('blog'),
+                               user=request.user)
+            sub.save()
+        else:
+            subscription.delete()
+        return redirect(self.request.get_full_path())
 
 class BlogCreateView(CreateView):
     model = Blog

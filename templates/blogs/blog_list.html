@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+<script>
+        function subscription(blog_id)
+        {
+            f = document.forms[0];
+            f.blog.value = blog_id;
+            f.submit();
+        }
+</script>
 <div class="container">
         <div class="row">
         <div class="col-md-6"><h2 style="display: inline; padding-right: 40px;">Блоги</h2></div>
@@ -23,8 +31,16 @@
                     <small>Создатель: <a href="{% url 'users:detail' username=blog.owner %}">{{ blog.owner }}</a></small>
                 </td>
                 <td>{{ blog.name }}</td>
-                <td><button type="button" class="btn btn-success btn-circle" title="Подписаться"><i class="glyphicon glyphicon-ok"></i></button>
-                    <button type="button" class="btn btn-danger btn-circle" title="Отписаться"><i class="glyphicon glyphicon-remove"></i></button>
+                <td>
+                    <form method="POST" target="">
+                    {% csrf_token %}
+                    <input type="hidden" name="blog" value="{{ blog.id }}">
+                    {% if blog.subscription_set.all %}
+                    <button type="button" class="btn btn-danger btn-circle" title="Отписаться" onclick="subscription({{ blog.id }});"><i class="glyphicon glyphicon-remove"></i></button>
+                    {% else %}
+                    <button type="button" class="btn btn-success btn-circle" title="Подписаться" onclick="subscription({{ blog.id }});"><i class="glyphicon glyphicon-ok"></i></button>
+                    {% endif %}
+                    </form>
                 </td>
             </tr>
             {% endfor %}
