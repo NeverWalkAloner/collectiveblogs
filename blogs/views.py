@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
+from django.http import HttpResponseNotFound
 from django.shortcuts import reverse, redirect
 from django.views.generic import ListView, CreateView
 from .models import Blog, Subscription
@@ -27,10 +28,12 @@ class BlogsView(ListView):
         return context
 
     def get_queryset(self):
-        subscriptions = Subscription.objects.filter(user=self.request.user)
-        blog = Blog.objects.all().prefetch_related(Prefetch('subscription_set', queryset=subscriptions))
-
-        return blog
+        if self.request.user.is_authenticated():
+            subscriptions = Subscription.objects.filter(user=self.request.user)
+            blog = Blog.objects.all().prefetch_related(Prefetch('subscription_set', queryset=subscriptions))
+            return blog
+        else:
+            return super(BlogsView, self).get_queryset()
 
     def post(self, request, *args, **kwargs):
         subscription = Subscription.objects.filter(blog_id=request.POST.get('blog'),
@@ -42,6 +45,7 @@ class BlogsView(ListView):
         else:
             subscription.delete()
         return redirect(self.request.get_full_path())
+
 
 class BlogCreateView(CreateView):
     model = Blog

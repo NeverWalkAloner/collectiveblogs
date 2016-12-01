@@ -11,7 +11,9 @@
 <div class="container">
         <div class="row">
         <div class="col-md-6"><h2 style="display: inline; padding-right: 40px;">Блоги</h2></div>
+        {% if request.user.is_authenticated %}
         <div class="col-md-6 text-right"><sup><a href="{% url 'blogs:create' %}" class="btn btn-default">Добавить блог</a></sup></div>
+        {% endif %}
         </div>
         <br>
         <table class="table table-striped">
@@ -19,7 +21,9 @@
             <tr>
                 <th>Наименование блога</th>
                 <th>Описание блога</th>
+                {% if request.user.is_authenticated %}
                 <th>Действие</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -31,6 +35,7 @@
                     <small>Создатель: <a href="{% url 'users:detail' username=blog.owner %}">{{ blog.owner }}</a></small>
                 </td>
                 <td>{{ blog.name }}</td>
+                {% if request.user.is_authenticated %}
                 <td>
                     <form method="POST" target="">
                     {% csrf_token %}
@@ -42,6 +47,7 @@
                     {% endif %}
                     </form>
                 </td>
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>

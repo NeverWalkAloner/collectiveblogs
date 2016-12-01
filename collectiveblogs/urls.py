@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^', include('main.urls', namespace='main')),
     url('^users/', include('users.urls', namespace='users')),
     url('^blogs/', include('blogs.urls', namespace='blogs')),
+    url(r'^posts/', include('posts.urls', namespace='posts')),
 ]
 
 if settings.DEBUG:
