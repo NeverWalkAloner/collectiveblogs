@@ -10,9 +10,9 @@
             f.submit();
         }
     </script>
-    <div class="container-fluid">
-        <div class="'row">
-            <div class="col-sm-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
                     <img src="{{ user.profile.avatar_url }}" width="50px" height="50px" style="margin-right: 20px;">
                 <h2 style="display: inline; margin-top:0 !important;">{{ user.username }}</h2>
             </div>
@@ -31,7 +31,7 @@
                 </h2>
             </div>
         </div>
-    </div>
+
 
     <ul class="nav nav-tabs">
         {% url 'users:detail' username=user.username as detail_url %}
@@ -45,4 +45,5 @@
     </ul>
     {% block user_view %}
     {% endblock %}
+     </div>
 {% endblock %}
