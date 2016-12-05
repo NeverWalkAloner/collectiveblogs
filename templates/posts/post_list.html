@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-This is posts list
+{% for post in posts_list %}
+{{ post.blog }} > {{ post.title }}
+{% endfor %}
+{% include 'pagination.html' %}
 {% endblock %}
