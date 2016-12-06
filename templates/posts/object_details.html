@@ -1,10 +1,10 @@
 <div class="row">
     <div class="panel panel-default">
         <div class="panel-body">
-            <h2><a href="#">{{ post.blog }}</a> > <a href="#" style="color: #2E2E2E !important;">{{ post.title }}</a></h2>
+            <h2><a href="#">{{ post.blog }}</a> > <a href="{% url 'posts:detail' pk=post.id %}" style="color: #2E2E2E !important;">{{ post.title }}</a></h2>
             {% block object_content %}
             <p style="word-wrap: break-word;">{{ post.content }}</p>
-            <p><a href="#" class="btn btn-default">Читать далее</a></p>
+            <p><a href="{% url 'posts:detail' pk=post.id %}" class="btn btn-default">Читать далее</a></p>
             {% endblock %}
         </div>
         <div class="panel-footer">

@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from .models import Post
 
 
@@ -44,3 +44,8 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super(PostCreateView, self).form_valid(form)
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'posts/post_details.html'

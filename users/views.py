@@ -83,7 +83,10 @@ class UserView(UpdateView):
     def get(self, request, *args, **kwargs):
         self.user = get_object_or_404(User, username=self.kwargs.get('username'))
         self.profile = get_object_or_404(Profile, user=self.user)
-        self.votes = KarmaVotes.objects.filter(vote_for=self.profile, vote_from=request.user)
+        if request.user.is_authenticated():
+            self.votes = KarmaVotes.objects.filter(vote_for=self.profile, vote_from=request.user)
+        else:
+            self.votes = False
         return super(UserView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
