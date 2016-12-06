@@ -3,12 +3,7 @@
 <div class="container">
     <h2>Список публикаций</h2>
     {% for post in posts_list %}
-    <div class="row">
-    <div class="col-sm-6">
-    <h2><a href="#">{{ post.blog }}</a> > {{ post.title }}</h2>
-    <p>{{ post.content }}</p>
-    </div>
-    </div>
+    {% include 'posts/object_details.html' %}
     {% endfor %}
 </div>
 {% include 'pagination.html' %}

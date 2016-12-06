@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h2><a href="#">{{ post.blog }}</a> > <a href="#" style="color: #2E2E2E !important;">{{ post.title }}</a></h2>
+            {% block object_content %}
+            <p style="word-wrap: break-word;">{{ post.content }}</p>
+            <p><a href="#" class="btn btn-default">Читать далее</a></p>
+            {% endblock %}
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-6"><h4>Рейтинг: <b>{{ post.rating }}</b></h4></div>
+                <div class="col-sm-6 text-right"><h4>Автор: <a
+                        href="{% url 'users:detail' username=post.author.username %}">{{ post.author }}</a></h4></div>
+            </div>
+        </div>
+    </div>
+</div>

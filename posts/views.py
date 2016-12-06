@@ -11,7 +11,8 @@ class PostListView(ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
-    paginate_by = 1
+    paginate_by = 3
+    ordering = ['-pub_date',]
 
     def get(self, request, *args, **kwargs):
         self.page = int(request.GET.get('page', 1))
