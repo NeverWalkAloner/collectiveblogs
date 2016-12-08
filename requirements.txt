@@ -2,3 +2,5 @@ Django==1.10
 python-dotenv==0.6
 django-crispy-forms==1.6
 Pillow==3.4.2
+django-pagedown==0.1.1
+django-markdown-deux==1.0.5

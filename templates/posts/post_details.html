@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load markdown_deux_tags %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -6,7 +7,7 @@
         <div class="panel-body">
             <h2><a href="#">{{ post.blog }}</a> > {{ post.title }}</h2>
             {% block object_content %}
-            <p style="word-wrap: break-word;">{{ post.content }}</p>
+            <p style="word-wrap: break-word;">{{ post.content|safe|markdown }}</p>
             {% endblock %}
         </div>
         <div class="panel-footer">

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, DetailView
+from .forms import PostForm
 from .models import Post
 
 
@@ -33,7 +34,7 @@ class PostListView(ListView):
 class PostCreateView(CreateView):
     model = Post
     template_name = 'posts/post_create.html'
-    fields = ['title', 'content', 'blog']
+    form_class = PostForm
     success_url = '/posts/'
 
     def get_context_data(self, **kwargs):
