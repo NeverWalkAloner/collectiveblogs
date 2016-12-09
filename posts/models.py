@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from blogs.models import Blog
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from markdown_deux import markdown
 
 
@@ -18,4 +19,4 @@ class Post(models.Model):
         return self.title
 
     def get_markdown(self):
-        return markdown(self.content)
+        return mark_safe(markdown(self.content))

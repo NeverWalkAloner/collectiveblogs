@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <title>Коллективные блоги {% block title %}{% endblock %}</title>
 </head>
+<script   src="http://code.jquery.com/jquery-1.12.4.min.js"
+          integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+<script>
+    $(document).ready(function(){
+    $(".content-markdown").each(function(){
+        var content = $(this).text()
+        var markedContent = marked(content)
+        $(this).html(markedContent)
+    })
+    $(".post_detail_item img").each(function(){
+        $(this).addClass("img-responsive")
+    })
+    $(".post_detail_item p").each(function(){
+        $(this).addClass("break-lines")
+    })
+    })
+</script>
 <body>
 <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
 <nav class="navbar navbar-default">

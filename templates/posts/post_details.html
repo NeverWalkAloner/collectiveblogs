@@ -7,7 +7,9 @@
         <div class="panel-body">
             <h2><a href="#">{{ post.blog }}</a> > {{ post.title }}</h2>
             {% block object_content %}
-            <p style="word-wrap: break-word;">{{ post.content|safe|markdown }}</p>
+            <div class="post_detail_item">
+            <p style="word-wrap: break-word;">{{ post.get_markdown|safe }}</p>
+            </div>
             {% endblock %}
         </div>
         <div class="panel-footer">
