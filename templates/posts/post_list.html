@@ -10,7 +10,7 @@
             <h2><a href="#">{{ post.blog }}</a> > <a href="{% url 'posts:detail' pk=post.id %}" style="color: #2E2E2E !important;">{{ post.title }}</a></h2>
             {% block object_content %}
             <div class="post_detail_item">
-            {{ post.get_markdown|safe }}
+            {{ post.get_markdown|truncatechars_html:120 }}
             </div>
             <p><a href="{% url 'posts:detail' pk=post.id %}" class="btn btn-default">Читать далее</a></p>
             {% endblock %}

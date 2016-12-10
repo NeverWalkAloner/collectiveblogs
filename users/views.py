@@ -107,7 +107,7 @@ def user_login(request):
         password = form.cleaned_data.get('password')
         user = authenticate(username=username, password=password)
         login(request, user)
-        return redirect('main:main')
+        return redirect('main:list')
     return render(request,
                   template_name='form.html',
                   context={'forms': [form, ], 'title': 'Войти'})
@@ -122,7 +122,7 @@ def user_registration(request):
         user.save()
         authenticate(username=user.username, password=password)
         login(request, user)
-        return redirect('main:main')
+        return redirect('main:list')
     return render(request,
            template_name='form.html',
            context={'forms': [form, ], 'title': 'Зарегистрироваться'})

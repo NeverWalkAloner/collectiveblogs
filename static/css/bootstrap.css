@@ -6770,3 +6770,9 @@ button.close {
   word-wrap: break-word;
   display: block;
 }
+.wmd-panel {
+    margin-right: 25%;
+    width: 100% !important;
+    min-width: 500px;
+    margin-left: 0px !important;
+}
