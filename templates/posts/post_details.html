@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load markdown_deux_tags %}
 {% block content %}
+<script>
+        function post_vote(value)
+        {
+            f = document.forms[0];
+            f.vote.value = value;
+            f.submit();
+        }
+    </script>
 <div class="container">
     <div class="row">
     <div class="panel panel-default">
@@ -14,7 +22,17 @@
         </div>
         <div class="panel-footer">
             <div class="row">
-                <div class="col-sm-6"><h4>Рейтинг: <b>{{ post.rating }}</b></h4></div>
+                <div class="col-sm-6"><h4 style="display: inline; margin-top:0 !important;">
+                    <form method="post" target="">
+                    {% csrf_token %}
+                    <input type="hidden" name="vote" value="1" />
+                    Рейтинг:
+                    <button type="button" class="btn btn-success btn-xs {% if request.user == post.author or voted == True or not request.user.is_authenticated %}
+                    disabled {% endif %}" {% if request.user != post.author and voted != True and request.user.is_authenticated %}onclick="post_vote(1);"{% endif %}><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                    <b>{{ post.rating }}</b>
+                    <button type="button" class="btn btn-danger btn-xs {% if request.user == post.author or request.user.profile.karma < 2 or voted == True or not request.user.is_authenticated %}
+                    disabled {% endif %}" {% if request.user != post.author and request.user.profile.karma >= 2 and voted != True and request.user.is_authenticated %}onclick="post_vote(-1);"{% endif %}><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    </form></h4></div>
                 <div class="col-sm-6 text-right"><h4>Автор: <a
                         href="{% url 'users:detail' username=post.author.username %}">{{ post.author }}</a></h4></div>
             </div>

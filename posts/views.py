@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from .forms import PostForm
-from .models import Post
+from .models import Post, PostVotes
 
 
 # Create your views here.
@@ -47,6 +47,25 @@ class PostCreateView(CreateView):
         return super(PostCreateView, self).form_valid(form)
 
 
-class PostDetailView(DetailView):
+class PostDetailView(UpdateView):
     model = Post
     template_name = 'posts/post_details.html'
+    fields = []
+
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated():
+            voted = PostVotes.objects.filter(post=self.object, voter=self.request.user).exists()
+            context['voted'] = voted
+        return context
+
+    def post(self, request, *args, **kwargs):
+        super(PostDetailView, self).post(request, *args, **kwargs)
+        if request.user.is_authenticated():
+            voted = PostVotes.objects.filter(post=self.object, voter=self.request.user).exists()
+            if not voted:
+                self.object.rating += int(self.request.POST.get('vote'))
+                self.object.save()
+                post_vote = PostVotes.objects.create(post=self.object, voter=self.request.user)
+                post_vote.save()
+                return redirect('posts:detail', pk=kwargs.get('pk'))
