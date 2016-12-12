@@ -1,8 +1,11 @@
 # -*- coding:utf-8 -*-
+import datetime
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.utils import timezone
+from blogs.models import Subscription
 from .forms import PostForm
 from .models import Post, PostVotes
 
@@ -69,3 +72,42 @@ class PostDetailView(UpdateView):
                 post_vote = PostVotes.objects.create(post=self.object, voter=self.request.user)
                 post_vote.save()
                 return redirect('posts:detail', pk=kwargs.get('pk'))
+
+
+class BestPostsView(ListView):
+    model = Post
+    template_name = 'posts/post_list.html'
+    context_object_name = 'posts_list'
+    paginate_by = 3
+
+    def get_queryset(self):
+        start = timezone.now() -datetime.timedelta(days=1)
+        return Post.objects.filter(pub_date__gt=start).order_by('-rating')[:3]
+
+
+class SubscriptionView(ListView):
+    model = Post
+    template_name = 'posts/post_list.html'
+    context_object_name = 'posts_list'
+    paginate_by = 3
+
+    def get_queryset(self):
+        subscriptions = Subscription.objects.filter(user__id=1).values('blog')
+        posts = Post.objects.filter(blog__in=subscriptions)
+        print(posts)
+        return posts
+
+    def get(self, request, *args, **kwargs):
+        self.page = int(request.GET.get('page', 1))
+        return super(SubscriptionView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(SubscriptionView, self).get_context_data(**kwargs)
+        p = Paginator(self.get_queryset(), self.paginate_by)
+        start = self.page - 2 if self.page - 2 > 0 else 1
+        end = start + 5 if start + 5 <= p.num_pages else p.num_pages + 1
+        start = end - 5 if end - 5 > 0 else 1
+        context['custom_page_range'] = range(start, end)
+        context['paginate_by'] = self.paginate_by
+        context['model'] = reverse('posts:list')
+        return context

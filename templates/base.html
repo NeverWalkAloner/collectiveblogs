@@ -62,8 +62,8 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Публикации <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="{% url 'posts:list' %}">Все</a></li>
-            <li><a href="#">Лучшие</a></li>
-            <li><a href="#">По подписке</a></li>
+            <li><a href="{% url 'posts:best' %}">Лучшие за сегодня</a></li>
+            <li><a href="{% url 'posts:subscription' %}">По подписке</a></li>
           </ul>
         </li>
         <!--<li><a href="#">Link</a></li>-->
