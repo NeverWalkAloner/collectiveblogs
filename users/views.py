@@ -162,8 +162,13 @@ class UserPostsView(ListView):
     paginate_by = 3
 
     def get(self, request, *args, **kwargs):
-        self.user = get_object_or_404(User, username=self.kwargs.get('username'))
         self.page = int(request.GET.get('page', 1))
+        self.user = get_object_or_404(User, username=self.kwargs.get('username'))
+        self.profile = get_object_or_404(Profile, user=self.user)
+        if request.user.is_authenticated():
+            self.votes = KarmaVotes.objects.filter(vote_for=self.profile, vote_from=request.user)
+        else:
+            self.votes = False
         return super(UserPostsView, self).get(request, *args, *kwargs)
 
     def get_queryset(self):
@@ -179,4 +184,37 @@ class UserPostsView(ListView):
         context['paginate_by'] = self.paginate_by
         context['user'] = self.user
         context['model'] = reverse('users:posts', kwargs={'username': self.kwargs.get('username')})
+        context['enable'] = ''
+        if self.votes:
+            if self.votes[0].vote_result > 0:
+                context['enable'] = 'down'
+            else:
+                context['enable'] = 'up'
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.user = get_object_or_404(User, username=self.kwargs.get('username'))
+        self.profile = get_object_or_404(Profile, user=self.user)
+        self.votes = KarmaVotes.objects.filter(vote_for=self.profile, vote_from=request.user)
+        if not karma_valid(self.user,
+                           request.user,
+                           int(request.POST.get('karma', 0)),
+                           self.votes):
+            return redirect('users:detail', username=self.kwargs.get('username'))
+        if self.votes:
+            self.profile.karma -= self.votes[0].vote_result
+            if self.profile.karma == 0 and int(request.POST.get('karma', 0)) < 0:
+                self.votes[0].vote_result = 0
+            else:
+                self.votes[0].vote_result = int(request.POST.get('karma', 0))
+            self.votes[0].save()
+        else:
+            vote = KarmaVotes.objects.create(vote_for=self.profile,
+                                            vote_from=request.user,
+                                            vote_result=int(request.POST.get('karma', 0)))
+            vote.save()
+        self.profile.karma += int(request.POST.get('karma', 0))
+        if self.profile.karma < 0:
+            self.profile.karma = 0
+        self.profile.save()
+        return redirect('users:posts', username=self.kwargs.get('username'))

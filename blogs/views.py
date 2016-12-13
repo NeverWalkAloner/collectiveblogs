@@ -1,8 +1,9 @@
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
 from django.http import HttpResponseNotFound
-from django.shortcuts import reverse, redirect
+from django.shortcuts import reverse, redirect, get_object_or_404
 from django.views.generic import ListView, CreateView
+from posts.models import Post
 from .models import Blog, Subscription
 
 
@@ -61,3 +62,30 @@ class BlogCreateView(CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(BlogCreateView, self).form_valid(form)
+
+
+class BlogPostsView(ListView):
+    model = Post
+    template_name = 'posts/post_list.html'
+    context_object_name = 'posts_list'
+    paginate_by = 3
+
+    def get(self, request, *args, **kwargs):
+        self.blog = get_object_or_404(Blog, unique_name=self.kwargs.get('blogname'))
+        self.page = int(request.GET.get('page', 1))
+        return super(BlogPostsView, self).get(request, *args, *kwargs)
+
+    def get_queryset(self):
+        return Post.objects.filter(blog=self.blog).order_by('-pub_date')
+
+    def get_context_data(self, **kwargs):
+        context = super(BlogPostsView, self).get_context_data(**kwargs)
+        p = Paginator(self.get_queryset(), self.paginate_by)
+        start = self.page - 2 if self.page - 2 > 0 else 1
+        end = start + 5 if start + 5 <= p.num_pages else p.num_pages + 1
+        start = end - 5 if end - 5 > 0 else 1
+        context['custom_page_range'] = range(start, end)
+        context['paginate_by'] = self.paginate_by
+        context['model'] = reverse('blogs:posts', kwargs={'blogname': self.kwargs.get('blogname')})
+        return context
+

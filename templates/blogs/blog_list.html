@@ -30,7 +30,7 @@
             {% for blog in blogs_list %}
             <tr>
                 <td>
-                    {{ blog.name }}
+                    <a href="{% url 'blogs:posts' blogname=blog.unique_name %}">{{ blog.name }}</a>
                     <br>
                     <small>Создатель: <a href="{% url 'users:detail' username=blog.owner %}">{{ blog.owner }}</a></small>
                 </td>
