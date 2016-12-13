@@ -36,12 +36,13 @@
     <ul class="nav nav-tabs">
         {% url 'users:detail' username=user.username as detail_url %}
         {% url 'users:edit' username=user.username as edit_url %}
+        {% url 'users:posts' username=user.username as posts_url%}
         <li role="presentation" {% if request.get_full_path == detail_url %} class="active"{% endif %}><a href="{% url 'users:detail' username=user.username %}">Профиль</a></li>
         {% if user == request.user %}
         <li role="presentation" {% if request.get_full_path == edit_url %} class="active"{% endif %}><a href="{% url 'users:edit' username=user.username %}">Редактировать
             профиль</a></li>
         {% endif %}
-        <li role="presentation"><a href="#">Статьи</a></li>
+        <li role="presentation" {% if request.path == posts_url %} class="active"{% endif %}><a href="{% url 'users:posts' username=user.username %}">Статьи</a></li>
     </ul>
     {% block user_view %}
     {% endblock %}

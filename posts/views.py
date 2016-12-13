@@ -109,5 +109,5 @@ class SubscriptionView(ListView):
         start = end - 5 if end - 5 > 0 else 1
         context['custom_page_range'] = range(start, end)
         context['paginate_by'] = self.paginate_by
-        context['model'] = reverse('posts:list')
+        context['model'] = reverse('posts:subscription')
         return context

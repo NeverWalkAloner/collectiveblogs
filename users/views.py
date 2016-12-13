@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.contrib.auth import authenticate, login
+from posts.models import Post
 from .forms import LoginForm, RegistrationForm, UserSettingForm, ProfileSettingForm
 from .models import Profile, KarmaVotes
 
@@ -152,3 +153,30 @@ def user_edit(request, username):
                                'user': user})
     else:
         raise Http404()
+
+
+class UserPostsView(ListView):
+    model = Post
+    template_name = 'users/user_post_list.html'
+    context_object_name = 'posts_list'
+    paginate_by = 3
+
+    def get(self, request, *args, **kwargs):
+        self.user = get_object_or_404(User, username=self.kwargs.get('username'))
+        self.page = int(request.GET.get('page', 1))
+        return super(UserPostsView, self).get(request, *args, *kwargs)
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.user).order_by('-pub_date')
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPostsView, self).get_context_data(**kwargs)
+        p = Paginator(self.get_queryset(), self.paginate_by)
+        start = self.page - 2 if self.page - 2 > 0 else 1
+        end = start + 5 if start + 5 <= p.num_pages else p.num_pages + 1
+        start = end - 5 if end - 5 > 0 else 1
+        context['custom_page_range'] = range(start, end)
+        context['paginate_by'] = self.paginate_by
+        context['user'] = self.user
+        context['model'] = reverse('users:posts', kwargs={'username': self.kwargs.get('username')})
+        return context

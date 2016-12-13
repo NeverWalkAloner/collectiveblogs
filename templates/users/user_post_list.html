@@ -1,0 +1,32 @@
+{% extends 'users/user_base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block user_view %}
+    <div class="container">
+    <h2>Список публикаций</h2>
+    {% for post in posts_list %}
+    <div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <small style="display: inline; margin-top:0 !important;">{{ post.pub_date }}</small>
+            <h2><a href="#">{{ post.blog }}</a> > <a href="{% url 'posts:detail' pk=post.id %}" style="color: #2E2E2E !important;">{{ post.title }}</a></h2>
+            {% block object_content %}
+            <div class="post_detail_item">
+            {{ post.get_markdown|truncatechars_html:120 }}
+            </div>
+            <p><a href="{% url 'posts:detail' pk=post.id %}" class="btn btn-default">Читать далее</a></p>
+            {% endblock %}
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-6"><h4>Рейтинг: <b>{{ post.rating }}</b></h4></div>
+                <div class="col-sm-6 text-right"><h4>Автор: <a
+                        href="{% url 'users:detail' username=post.author.username %}">{{ post.author }}</a></h4></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+    </div>
+    {% include 'pagination.html' %}
+{% endblock %}
