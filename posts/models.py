@@ -29,3 +29,4 @@ class Post(models.Model):
 class PostVotes(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     voter = models.ForeignKey(User, on_delete=models.CASCADE)
+    result = models.IntegerField(verbose_name='Результат голосования', default=0)

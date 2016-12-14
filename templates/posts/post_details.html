@@ -13,7 +13,7 @@
     <div class="row">
     <div class="panel panel-default">
         <div class="panel-body">
-            <h2><a href="#">{{ post.blog }}</a> > {{ post.title }}</h2>
+            <h2><a href="{% url 'blogs:posts' blogname=post.blog.unique_name %}">{{ post.blog }}</a> > {{ post.title }}</h2>
             {% block object_content %}
             <div class="post_detail_item">
             <p style="word-wrap: break-word;">{{ post.get_markdown|safe }}</p>
@@ -27,10 +27,10 @@
                     {% csrf_token %}
                     <input type="hidden" name="vote" value="1" />
                     Рейтинг:
-                    <button type="button" class="btn btn-success btn-xs {% if request.user == post.author or voted == True or not request.user.is_authenticated %}
+                    <button type="button" class="btn {% if enable == 'down' %}btn-success{% else %}btn-default{% endif %} btn-xs {% if request.user == post.author or voted == True or not request.user.is_authenticated %}
                     disabled {% endif %}" {% if request.user != post.author and voted != True and request.user.is_authenticated %}onclick="post_vote(1);"{% endif %}><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
                     <b>{{ post.rating }}</b>
-                    <button type="button" class="btn btn-danger btn-xs {% if request.user == post.author or request.user.profile.karma < 2 or voted == True or not request.user.is_authenticated %}
+                    <button type="button" class="btn {% if enable == 'up' %}btn-danger{% else %}btn-default{% endif %} btn-xs {% if request.user == post.author or request.user.profile.karma < 2 or voted == True or not request.user.is_authenticated %}
                     disabled {% endif %}" {% if request.user != post.author and request.user.profile.karma >= 2 and voted != True and request.user.is_authenticated %}onclick="post_vote(-1);"{% endif %}><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                     </form></h4></div>
                 <div class="col-sm-6 text-right"><h4>Автор: <a

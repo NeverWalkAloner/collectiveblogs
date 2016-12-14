@@ -59,7 +59,13 @@ class PostDetailView(UpdateView):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
             voted = PostVotes.objects.filter(post=self.object, voter=self.request.user).exists()
+            vote = PostVotes.objects.filter(post=self.object, voter=self.request.user).first()
             context['voted'] = voted
+            if voted:
+                if vote.result > 0:
+                    context['enable'] = 'up'
+                else:
+                    context['enable'] = 'down'
         return context
 
     def post(self, request, *args, **kwargs):
@@ -92,7 +98,7 @@ class SubscriptionView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        subscriptions = Subscription.objects.filter(user__id=1).values('blog')
+        subscriptions = Subscription.objects.filter(user__id=self.request.user.id).values('blog')
         posts = Post.objects.filter(blog__in=subscriptions)
         print(posts)
         return posts

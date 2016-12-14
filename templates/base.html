@@ -63,7 +63,7 @@
           <ul class="dropdown-menu">
             <li><a href="{% url 'posts:list' %}">Все</a></li>
             <li><a href="{% url 'posts:best' %}">Лучшие за сегодня</a></li>
-            <li><a href="{% url 'posts:subscription' %}">По подписке</a></li>
+            {% if request.user.is_authenticated %}<li><a href="{% url 'posts:subscription' %}">По подписке</a></li>{% endif %}
           </ul>
         </li>
         <!--<li><a href="#">Link</a></li>-->
