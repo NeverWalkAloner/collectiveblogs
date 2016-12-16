@@ -19,6 +19,14 @@
             <p style="word-wrap: break-word;">{{ post.get_markdown|safe }}</p>
             </div>
             {% endblock %}
+            <br>
+            {% with names=post.tags.names %}
+                {% if names.count > 0 %}
+                <p class="tags">Тэги:  {% for name in names %}{% if not forloop.first %},{% endif %}
+                <a href="{% url 'posts:list' %}?tag={{ name|urlencode }}">{{ name }}</a>{% endfor %}
+                </p>
+                {% endif %}
+            {% endwith %}
         </div>
         <div class="panel-footer">
             <div class="row">

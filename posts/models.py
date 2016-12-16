@@ -5,6 +5,7 @@ from django.shortcuts import reverse
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from markdown_deux import markdown
+from taggit.managers import TaggableManager
 
 
 # Create your models here.
@@ -15,6 +16,7 @@ class Post(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, verbose_name='Блог')
     rating = models.IntegerField('Рейтинг', default=0)
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+    tags = TaggableManager(blank=True, verbose_name='Теги')
 
     def __str__(self):
         return self.title

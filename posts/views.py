@@ -20,6 +20,7 @@ class PostListView(ListView):
 
     def get(self, request, *args, **kwargs):
         self.page = int(request.GET.get('page', 1))
+        self.tag = request.GET.get('tag')
         return super(PostListView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -32,6 +33,12 @@ class PostListView(ListView):
         context['paginate_by'] = self.paginate_by
         context['model'] = reverse('posts:list')
         return context
+
+    def get_queryset(self):
+        posts = super(PostListView, self).get_queryset()
+        if self.tag:
+            posts = posts.filter(tags__name=self.tag)
+        return posts
 
 
 class PostCreateView(CreateView):

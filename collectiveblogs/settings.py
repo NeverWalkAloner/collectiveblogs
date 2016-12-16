@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'pagedown',
     'markdown_deux',
+    'taggit',
 ]
 
 MIDDLEWARE = [
