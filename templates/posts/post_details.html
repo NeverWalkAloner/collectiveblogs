@@ -47,5 +47,13 @@
         </div>
     </div>
 </div>
+    <h3>Комментарии:</h3>
+    {% for comment in post.comments %}
+    <div class="row">
+        <a><a href="{% url 'users:detail' username=comment.user.username %}">{{ comment.user }}</a>
+        {{ comment.timestamp }}</small><br>
+        {{ comment.content }}
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

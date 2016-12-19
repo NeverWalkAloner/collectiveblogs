@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.safestring import mark_safe
 from markdown_deux import markdown
 from taggit.managers import TaggableManager
+from comments.models import Comment
 
 
 # Create your models here.
@@ -26,6 +27,11 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('posts:detail', kwargs={'pk': self.id})
+
+    @property
+    def comments(self):
+        qs = Comment.objects.filter_for_post(self)
+        return qs
 
 
 class PostVotes(models.Model):
