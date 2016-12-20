@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from blogs.models import Blog
 from django.shortcuts import reverse
 from django.utils import timezone
@@ -32,6 +33,10 @@ class Post(models.Model):
     def comments(self):
         qs = Comment.objects.filter_for_post(self)
         return qs
+
+    @property
+    def get_content_type(self):
+        return ContentType.objects.get_for_model(self.__class__)
 
 
 class PostVotes(models.Model):

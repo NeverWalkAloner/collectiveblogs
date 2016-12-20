@@ -8,6 +8,7 @@ from django.utils import timezone
 from blogs.models import Subscription
 from .forms import PostForm
 from .models import Post, PostVotes
+from comments.forms import CommentForm
 
 
 # Create your views here.
@@ -62,12 +63,19 @@ class PostDetailView(UpdateView):
     template_name = 'posts/post_details.html'
     fields = []
 
+    def get(self, request, *args, **kwargs):
+        return super(PostDetailView, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
+            initial_data = {'content_type': self.object.get_content_type,
+                            'obj_id': self.object.id}
+            self.comment_form = CommentForm(initial=initial_data)
             voted = PostVotes.objects.filter(post=self.object, voter=self.request.user).exists()
             vote = PostVotes.objects.filter(post=self.object, voter=self.request.user).first()
             context['voted'] = voted
+            context['comment_form'] = self.comment_form
             if voted:
                 if vote.result > 0:
                     context['enable'] = 'up'
@@ -79,12 +87,15 @@ class PostDetailView(UpdateView):
         super(PostDetailView, self).post(request, *args, **kwargs)
         if request.user.is_authenticated():
             voted = PostVotes.objects.filter(post=self.object, voter=self.request.user).exists()
-            if not voted:
+            if not voted and self.request.POST.get('vote'):
                 self.object.rating += int(self.request.POST.get('vote'))
                 self.object.save()
                 post_vote = PostVotes.objects.create(post=self.object, voter=self.request.user)
                 post_vote.save()
                 return redirect('posts:detail', pk=kwargs.get('pk'))
+            if self.comment_form.is_valid():
+                print(self.comment_form.cleaned_data)
+            return redirect('posts:detail', pk=kwargs.get('pk'))
 
 
 class BestPostsView(ListView):
