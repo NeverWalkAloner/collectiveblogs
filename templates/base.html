@@ -80,6 +80,12 @@
           <!--</ul>-->
         <!--</li>-->
       </ul>
+      <form class="navbar-form navbar-left" method="get" target="">
+        <div class="form-group">
+          <input type="text" class="form-control" name="q" placeholder="Поиск">
+        </div>
+        <button type="submit" class="btn btn-default">Искать</button>
+      </form>
       <ul class="nav navbar-nav navbar-right">
         {% if request.user.is_authenticated %}
             <li><a href="{% url 'users:detail' username=request.user.username %}">{{ request.user.username }}</a></li>
