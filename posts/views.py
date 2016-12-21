@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import datetime
 from django.shortcuts import render, redirect
+from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
@@ -9,6 +10,7 @@ from blogs.models import Subscription
 from .forms import PostForm
 from .models import Post, PostVotes
 from comments.forms import CommentForm
+from comments.models import Comment
 
 
 # Create your views here.
@@ -71,11 +73,11 @@ class PostDetailView(UpdateView):
         if self.request.user.is_authenticated():
             initial_data = {'content_type': self.object.get_content_type,
                             'obj_id': self.object.id}
-            self.comment_form = CommentForm(initial=initial_data)
+            comment_form = CommentForm(initial=initial_data)
             voted = PostVotes.objects.filter(post=self.object, voter=self.request.user).exists()
             vote = PostVotes.objects.filter(post=self.object, voter=self.request.user).first()
             context['voted'] = voted
-            context['comment_form'] = self.comment_form
+            context['comment_form'] = comment_form
             if voted:
                 if vote.result > 0:
                     context['enable'] = 'up'
@@ -85,6 +87,7 @@ class PostDetailView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         super(PostDetailView, self).post(request, *args, **kwargs)
+        comment_form = CommentForm(request.POST)
         if request.user.is_authenticated():
             voted = PostVotes.objects.filter(post=self.object, voter=self.request.user).exists()
             if not voted and self.request.POST.get('vote'):
@@ -93,8 +96,15 @@ class PostDetailView(UpdateView):
                 post_vote = PostVotes.objects.create(post=self.object, voter=self.request.user)
                 post_vote.save()
                 return redirect('posts:detail', pk=kwargs.get('pk'))
-            if self.comment_form.is_valid():
-                print(self.comment_form.cleaned_data)
+            if comment_form.is_valid():
+                c_type = comment_form.cleaned_data.get('content_type')
+                content_type = ContentType.objects.get(model=c_type)
+                obj_id = int(comment_form.cleaned_data.get('obj_id'))
+                content = comment_form.cleaned_data.get('content')
+                Comment.objects.create(user=request.user,
+                                       content_type=content_type,
+                                       object_id=obj_id,
+                                       content=content)
             return redirect('posts:detail', pk=kwargs.get('pk'))
 
 

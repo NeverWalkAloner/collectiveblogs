@@ -24,7 +24,7 @@ class Comment(models.Model):
     objects = CommentManager()
 
     class Meta:
-        ordering = ['-timestamp']
+        ordering = ['timestamp']
 
     def __str__(self):
         return self.user.username
