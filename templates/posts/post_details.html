@@ -5,7 +5,7 @@
 <script>
         function post_vote(value)
         {
-            f = document.forms[0];
+            f = document.getElementById("post_vote");
             f.vote.value = value;
             f.submit();
         }
@@ -32,7 +32,7 @@
         <div class="panel-footer">
             <div class="row">
                 <div class="col-sm-6"><h4 style="display: inline; margin-top:0 !important;">
-                    <form method="post" target="">
+                    <form method="post" target="" id="post_vote">
                     {% csrf_token %}
                     <input type="hidden" name="vote" value="1" />
                     Рейтинг:

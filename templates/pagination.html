@@ -3,9 +3,15 @@
         <ul class="pagination">
             <li>
                 {% if page_obj.has_previous %}
+                {% if 'search/?q=' in request.get_full_path %}
+                <a href="{{ model }}&page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                {% else %}
                 <a href="{{ model }}?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
+                {% endif %}
                 {% else %}
                 <a href="#" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
@@ -13,13 +19,19 @@
                 {% endif %}
             </li>
             {% for pn in custom_page_range %}
-            <li {% if page_obj.number == pn %}class="active"{% endif %}> <a href="{{ model }}?page={{ pn }}">{{ pn }}</a></li>
+            <li {% if page_obj.number == pn %}class="active"{% endif %}> <a href="{% if 'search/?q=' in request.get_full_path %}{{ model }}&page={{ pn }}{% else %}{{ model }}?page={{ pn }}{% endif %}">{{ pn }}</a></li>
             {% endfor %}
             <li>
                 {% if page_obj.has_next %}
+                {% if 'search/?q=' in request.get_full_path %}
+                <a href="{{ model }}&page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                {% else %}
                 <a href="{{ model }}?page={{ page_obj.next_page_number }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
+                {% endif %}
                 {% else %}
                 <a href="#" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView
 from django.views.generic import UpdateView
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ from django.contrib.auth import authenticate, login
 from posts.models import Post
 from .forms import LoginForm, RegistrationForm, UserSettingForm, ProfileSettingForm
 from .models import Profile, KarmaVotes
+from generic.mixins import SearchMixin
 
 
 def karma_valid(user, current_user, karma_value, votes):
@@ -22,7 +24,7 @@ def karma_valid(user, current_user, karma_value, votes):
     return True
 
 
-class UserListView(ListView):
+class UserListView(SearchMixin, ListView):
     model = Profile
     paginate_by = 3
     template_name = 'users/user_list.html'
@@ -45,7 +47,7 @@ class UserListView(ListView):
         return context
 
 
-class UserView(UpdateView):
+class UserView(SearchMixin, UpdateView):
     model = Profile
     template_name = 'users/user_detail.html'
     fields = []
@@ -102,6 +104,9 @@ class UserView(UpdateView):
 
 
 def user_login(request):
+    q = request.GET.get('q')
+    if request.GET.get('q'):
+        return HttpResponseRedirect(reverse('search:main') + '?q=' + q)
     form = LoginForm(request.POST or None)
     if form.is_valid():
         username = form.cleaned_data.get('username')
@@ -115,6 +120,9 @@ def user_login(request):
 
 
 def user_registration(request):
+    q = request.GET.get('q')
+    if request.GET.get('q'):
+        return HttpResponseRedirect(reverse('search:main') + '?q=' + q)
     form = RegistrationForm(request.POST or None)
     if form.is_valid():
         user = form.save(commit=False)
@@ -130,6 +138,9 @@ def user_registration(request):
 
 
 def user_edit(request, username):
+    q = request.GET.get('q')
+    if request.GET.get('q'):
+        return HttpResponseRedirect(reverse('search:main') + '?q=' + q)
     user = get_object_or_404(User, username=username)
     if request.user == user:
         profile = get_object_or_404(Profile, user=user)
@@ -155,7 +166,7 @@ def user_edit(request, username):
         raise Http404()
 
 
-class UserPostsView(ListView):
+class UserPostsView(SearchMixin, ListView):
     model = Post
     template_name = 'users/user_post_list.html'
     context_object_name = 'posts_list'

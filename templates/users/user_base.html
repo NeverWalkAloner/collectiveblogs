@@ -5,7 +5,7 @@
     <script>
         function karma_vote(value)
         {
-            f = document.forms[0];
+            f = document.getElementById("karma_vote");
             f.karma.value = value;
             f.submit();
         }
@@ -18,7 +18,7 @@
             </div>
             <div class="col-sm-4">
                 <h2 style="margin-top:0 !important;">
-                    <form method="post" target="">
+                    <form method="post" target="" id="karma_vote">
                     {% csrf_token %}
                     <input type="hidden" name="karma" value="1" />
                     <small>Карма:</small>

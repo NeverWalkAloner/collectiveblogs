@@ -11,10 +11,11 @@ from .forms import PostForm
 from .models import Post, PostVotes
 from comments.forms import CommentForm
 from comments.models import Comment
+from generic.mixins import SearchMixin
 
 
 # Create your views here.
-class PostListView(ListView):
+class PostListView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
@@ -44,7 +45,7 @@ class PostListView(ListView):
         return posts
 
 
-class PostCreateView(CreateView):
+class PostCreateView(SearchMixin, CreateView):
     model = Post
     template_name = 'posts/post_create.html'
     form_class = PostForm
@@ -60,7 +61,7 @@ class PostCreateView(CreateView):
         return super(PostCreateView, self).form_valid(form)
 
 
-class PostDetailView(UpdateView):
+class PostDetailView(SearchMixin, UpdateView):
     model = Post
     template_name = 'posts/post_details.html'
     fields = []
@@ -108,7 +109,7 @@ class PostDetailView(UpdateView):
             return redirect('posts:detail', pk=kwargs.get('pk'))
 
 
-class BestPostsView(ListView):
+class BestPostsView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
@@ -119,7 +120,7 @@ class BestPostsView(ListView):
         return Post.objects.filter(pub_date__gt=start).order_by('-rating')[:3]
 
 
-class SubscriptionView(ListView):
+class SubscriptionView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'

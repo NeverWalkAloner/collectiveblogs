@@ -5,9 +5,10 @@ from django.shortcuts import reverse, redirect, get_object_or_404
 from django.views.generic import ListView, CreateView
 from posts.models import Post
 from .models import Blog, Subscription
+from generic.mixins import SearchMixin
 
 
-class BlogsView(ListView):
+class BlogsView(SearchMixin, ListView):
     model = Blog
     template_name = 'blogs/blog_list.html'
     paginate_by = 5
@@ -48,7 +49,7 @@ class BlogsView(ListView):
         return redirect(self.request.get_full_path())
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(SearchMixin, CreateView):
     model = Blog
     fields = ['name', 'description', 'unique_name']
     template_name = 'blogs/blog_edit.html'
@@ -64,7 +65,7 @@ class BlogCreateView(CreateView):
         return super(BlogCreateView, self).form_valid(form)
 
 
-class BlogPostsView(ListView):
+class BlogPostsView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'

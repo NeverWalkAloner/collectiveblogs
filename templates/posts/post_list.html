@@ -2,7 +2,11 @@
 {% load markdown_deux_tags %}
 {% block content %}
 <div class="container">
+    {% if 'search/?q=' in request.get_full_path %}
+    <h2>Результаты поиска</h2>
+    {% else %}
     <h2>Список публикаций</h2>
+    {% endif %}
     {% for post in posts_list %}
     <div class="row">
     <div class="panel panel-default">
