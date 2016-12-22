@@ -3,7 +3,7 @@
 <script>
         function subscription(blog_id)
         {
-            f = document.forms[0];
+            f = document.getElementById("subscribe_form");
             f.blog.value = blog_id;
             f.submit();
         }
@@ -37,7 +37,7 @@
                 <td>{{ blog.name }}</td>
                 {% if request.user.is_authenticated %}
                 <td>
-                    <form method="POST" target="">
+                    <form method="POST" target="" id="subscribe_form">
                     {% csrf_token %}
                     <input type="hidden" name="blog" value="{{ blog.id }}">
                     {% if blog.subscription_set.all %}
