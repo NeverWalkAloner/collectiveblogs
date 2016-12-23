@@ -36,10 +36,10 @@
                     {% csrf_token %}
                     <input type="hidden" name="vote" value="1" />
                     Рейтинг:
-                    <button type="button" class="btn {% if enable == 'down' %}btn-success{% else %}btn-default{% endif %} btn-xs {% if request.user == post.author or voted == True or not request.user.is_authenticated %}
+                    <button type="button" title="Нравится" class="btn {% if enable == 'down' %}btn-success{% else %}btn-default{% endif %} btn-xs {% if request.user == post.author or voted == True or not request.user.is_authenticated %}
                     disabled {% endif %}" {% if request.user != post.author and voted != True and request.user.is_authenticated %}onclick="post_vote(1);"{% endif %}><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
                     <b>{{ post.rating }}</b>
-                    <button type="button" class="btn {% if enable == 'up' %}btn-danger{% else %}btn-default{% endif %} btn-xs {% if request.user == post.author or request.user.profile.karma < 2 or voted == True or not request.user.is_authenticated %}
+                    <button type="button" title="{% if request.user.profile.karma >= 2 %}Не нравится{% else %}Недостаточно кармы{% endif %}" class="btn {% if enable == 'up' %}btn-danger{% else %}btn-default{% endif %} btn-xs {% if request.user == post.author or request.user.profile.karma < 2 or voted == True or not request.user.is_authenticated %}
                     disabled {% endif %}" {% if request.user != post.author and request.user.profile.karma >= 2 and voted != True and request.user.is_authenticated %}onclick="post_vote(-1);"{% endif %}><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                     </form></h4></div>
                 <div class="col-sm-6 text-right"><h4>Автор: <a

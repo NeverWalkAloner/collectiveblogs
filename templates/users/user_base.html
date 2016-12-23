@@ -22,10 +22,10 @@
                     {% csrf_token %}
                     <input type="hidden" name="karma" value="1" />
                     <small>Карма:</small>
-                    <button type="button" class="btn {% if enable == 'down' %}btn-success{% else %}btn-default{% endif %} btn-xs {% if request.user == user or enable == 'down' or not request.user.is_authenticated %}
+                    <button type="button" title="Увеличить карму" class="btn {% if enable == 'down' %}btn-success{% else %}btn-default{% endif %} btn-xs {% if request.user == user or enable == 'down' or not request.user.is_authenticated %}
                     disabled {% endif %}" {% if request.user != user and enable != "down" and request.user.is_authenticated %}onclick="karma_vote(1);"{% endif %}><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
                     {{ user.profile.karma }}
-                    <button type="button" class="btn {% if enable == 'up' %}btn-danger{% else %}btn-default{% endif %} btn-xs {% if user.profile.karma == 0 or request.user == user or request.user.profile.karma < 2 or enable == 'up' or not request.user.is_authenticated %}
+                    <button type="button" title="{% if request.user.profile.karma >= 2 %}Уменьшить карму{% else %}Недостаточно кармы{% endif %}" class="btn {% if enable == 'up' %}btn-danger{% else %}btn-default{% endif %} btn-xs {% if user.profile.karma == 0 or request.user == user or request.user.profile.karma < 2 or enable == 'up' or not request.user.is_authenticated %}
                     disabled {% endif %}" {% if request.user != user and user.profile.karma != 0 and request.user.profile.karma >= 2 and enable != 'up' and request.user.is_authenticated %}onclick="karma_vote(-1);"{% endif %}><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                     </form>
                 </h2>
