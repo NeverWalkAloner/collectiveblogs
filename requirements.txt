@@ -1,5 +1,6 @@
 psycopg2==2.6.2
 gunicorn
+dj-database-url
 Django==1.10
 python-dotenv==0.6
 django-crispy-forms==1.6
