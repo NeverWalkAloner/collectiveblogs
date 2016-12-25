@@ -26,7 +26,7 @@ def karma_valid(user, current_user, karma_value, votes):
 
 class UserListView(SearchMixin, ListView):
     model = Profile
-    paginate_by = 3
+    paginate_by = 20
     template_name = 'users/user_list.html'
     context_object_name = 'users_list'
     ordering = ['-karma',]

@@ -10,7 +10,7 @@ class SearchView(ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
-    paginate_by = 3
+    paginate_by = 10
 
     def get(self, request, *args, **kwargs):
         self.q = request.GET.get('q')
