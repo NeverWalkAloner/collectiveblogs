@@ -127,9 +127,11 @@ def user_registration(request):
     if form.is_valid():
         user = form.save(commit=False)
         password = form.cleaned_data.get('password')
+        user.is_active = False
         user.set_password(password)
         user.save()
-        authenticate(username=user.username, password=password)
+        user = authenticate(username=user.username, password=password)
+        print(user)
         login(request, user)
         return redirect('main:list')
     return render(request,
