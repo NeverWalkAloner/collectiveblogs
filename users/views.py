@@ -131,7 +131,6 @@ def user_registration(request):
         user.set_password(password)
         user.save()
         user = authenticate(username=user.username, password=password)
-        print(user)
         login(request, user)
         return redirect('main:list')
     return render(request,
