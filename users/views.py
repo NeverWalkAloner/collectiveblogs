@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView
 from django.views.generic import UpdateView
@@ -127,11 +128,19 @@ def user_registration(request):
     if form.is_valid():
         user = form.save(commit=False)
         password = form.cleaned_data.get('password')
-        user.is_active = False
         user.set_password(password)
         user.save()
         user = authenticate(username=user.username, password=password)
         login(request, user)
+        send_mail(
+            'Добо пожаловать на сайт Collectiveblogs',
+            'Вы успешно зарегистрировались на сайте collectiveblogs. '
+            'Для просмотра профиля пройдите по ссылке: {}'.format(reverse('users:detail',
+                                                                          kwargs={'username': user.username})),
+            'info@collectiveblogs.org',
+            [form.cleaned_data.get('email')],
+            fail_silently=False,
+        )
         return redirect('main:list')
     return render(request,
            template_name='form.html',
