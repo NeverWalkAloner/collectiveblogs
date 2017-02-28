@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from celery.decorators import periodic_task
+from celery.decorators import task
+from celery.task.schedules import crontab
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView
@@ -13,6 +16,23 @@ from .forms import LoginForm, RegistrationForm, UserSettingForm, ProfileSettingF
 from .models import Profile, KarmaVotes
 from generic.mixins import SearchMixin
 
+
+@task(name='simple_test')
+def just_test():
+    send_mail(
+        'Добо пожаловать на сайт Collectiveblogs',
+        'Вы успешно зарегистрировались на сайте collectiveblogs. '
+        'Для просмотра профиля пройдите по ссылке: the_link',
+        'info@collectiveblogs.com',
+        ['user@mail.com'],
+        fail_silently=False,
+    )
+
+@periodic_task(run_every=(crontab(minute='*/1')), name='just_periodic', ignore_result=True)
+def just_periodic():
+    for i in range(1000000000):
+        pass
+    print('test periodic task')
 
 def karma_valid(user, current_user, karma_value, votes):
     if user == current_user:
@@ -105,6 +125,7 @@ class UserView(SearchMixin, UpdateView):
 
 
 def user_login(request):
+    just_test.delay()
     q = request.GET.get('q')
     if request.GET.get('q'):
         return HttpResponseRedirect(reverse('search:main') + '?q=' + q)
@@ -132,15 +153,6 @@ def user_registration(request):
         user.save()
         user = authenticate(username=user.username, password=password)
         login(request, user)
-        send_mail(
-            'Добо пожаловать на сайт Collectiveblogs',
-            'Вы успешно зарегистрировались на сайте collectiveblogs. '
-            'Для просмотра профиля пройдите по ссылке: {}'.format(reverse('users:detail',
-                                                                          kwargs={'username': user.username})),
-            'info@collectiveblogs.org',
-            [form.cleaned_data.get('email')],
-            fail_silently=False,
-        )
         return redirect('main:list')
     return render(request,
            template_name='form.html',
