@@ -3,6 +3,7 @@ from celery.decorators import periodic_task
 from celery.decorators import task
 from celery.task.schedules import crontab
 from django.core.mail import send_mail
+from django.core.mail.message import EmailMultiAlternatives
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView
 from django.views.generic import UpdateView
@@ -30,8 +31,12 @@ def just_test():
 
 @periodic_task(run_every=(crontab(minute='*/1')), name='just_periodic', ignore_result=True)
 def just_periodic():
-    for i in range(1000000000):
-        pass
+    emails = User.objects.filter(is_active=True).exclude(email='').values_list('email', flat=True)
+    msg = EmailMultiAlternatives('Рассылка сайта Collectiveblogs',
+                                 'Наша ежедневная рассылка',
+                                 'info@collectiveblogs.com',
+                                  bcc=emails
+                                 )
     print('test periodic task')
 
 def karma_valid(user, current_user, karma_value, votes):
