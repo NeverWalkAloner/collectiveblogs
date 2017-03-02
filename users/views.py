@@ -1,43 +1,55 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
 from celery.decorators import periodic_task
 from celery.decorators import task
 from celery.task.schedules import crontab
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.mail.message import EmailMultiAlternatives
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
+from django.template.loader import get_template
 from django.views.generic import DetailView, ListView
 from django.views.generic import UpdateView
-from django.contrib.auth.models import User
-from django.core.paginator import Paginator
+
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.contrib.auth import authenticate, login
+from django.utils import timezone
 from posts.models import Post
 from .forms import LoginForm, RegistrationForm, UserSettingForm, ProfileSettingForm
 from .models import Profile, KarmaVotes
 from generic.mixins import SearchMixin
 
 
-@task(name='simple_test')
-def just_test():
+@task(name='send_registation_email')
+def registration_email(recipient, profile_url):
     send_mail(
         'Добо пожаловать на сайт Collectiveblogs',
         'Вы успешно зарегистрировались на сайте collectiveblogs. '
-        'Для просмотра профиля пройдите по ссылке: the_link',
-        'info@collectiveblogs.com',
-        ['user@mail.com'],
+        'Для просмотра профиля пройдите по ссылке: {}'.format(settings.SITE_URL + profile_url),
+        settings.DEFAULT_FROM_EMAIL,
+        [recipient],
         fail_silently=False,
     )
 
-@periodic_task(run_every=(crontab(minute='*/1')), name='just_periodic', ignore_result=True)
-def just_periodic():
+
+@periodic_task(run_every=(crontab(minute='*/2')), name='update_email', ignore_result=True)
+def update_email():
     emails = User.objects.filter(is_active=True).exclude(email='').values_list('email', flat=True)
+    posts = Post.objects.filter(pub_date__gte=timezone.now() + timedelta(days=-1))
+    mail_template = get_template('users/email.html')
+    ctx = {'posts': posts,
+           'site_url': settings.SITE_URL}
+    mail_content = mail_template.render(ctx)
     msg = EmailMultiAlternatives('Рассылка сайта Collectiveblogs',
-                                 'Наша ежедневная рассылка',
-                                 'info@collectiveblogs.com',
+                                 'Новые публикации за сутки',
                                   bcc=emails
                                  )
-    print('test periodic task')
+    msg.attach_alternative(mail_content, 'text/html')
+    msg.send()
+
 
 def karma_valid(user, current_user, karma_value, votes):
     if user == current_user:
@@ -130,7 +142,6 @@ class UserView(SearchMixin, UpdateView):
 
 
 def user_login(request):
-    just_test.delay()
     q = request.GET.get('q')
     if request.GET.get('q'):
         return HttpResponseRedirect(reverse('search:main') + '?q=' + q)
@@ -156,6 +167,8 @@ def user_registration(request):
         password = form.cleaned_data.get('password')
         user.set_password(password)
         user.save()
+        registration_email.delay(form.cleaned_data.get('email'),
+                                 reverse('users:detail', kwargs={'username': user.username}))
         user = authenticate(username=user.username, password=password)
         login(request, user)
         return redirect('main:list')

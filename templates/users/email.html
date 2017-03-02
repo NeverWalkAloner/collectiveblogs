@@ -1,0 +1,9 @@
+{% load markdown_deux_tags %}
+<html lang="en">
+Новые публикации на сайте {{ site_url }}:
+{% for post in posts %}
+    <h2><a href="{{ site_url }}{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+    <p>{{ post.get_markdown|truncatechars_html:120 }}</p>
+    <br>
+{% endfor %}
+</html>
