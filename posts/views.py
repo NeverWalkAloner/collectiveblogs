@@ -19,7 +19,7 @@ class PostListView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
-    paginate_by = 3
+    paginate_by = 10
     ordering = ['-pub_date',]
 
     def get(self, request, *args, **kwargs):
@@ -113,7 +113,7 @@ class BestPostsView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
-    paginate_by = 3
+    paginate_by = 10
 
     def get_queryset(self):
         start = timezone.now() -datetime.timedelta(days=1)
@@ -124,7 +124,7 @@ class SubscriptionView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
-    paginate_by = 3
+    paginate_by = 10
 
     def get_queryset(self):
         subscriptions = Subscription.objects.filter(user__id=self.request.user.id).values('blog')

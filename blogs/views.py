@@ -11,7 +11,7 @@ from generic.mixins import SearchMixin
 class BlogsView(SearchMixin, ListView):
     model = Blog
     template_name = 'blogs/blog_list.html'
-    paginate_by = 5
+    paginate_by = 20
     context_object_name = 'blogs_list'
 
     def get(self, request, *args, **kwargs):
@@ -69,7 +69,7 @@ class BlogPostsView(SearchMixin, ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts_list'
-    paginate_by = 3
+    paginate_by = 10
 
     def get(self, request, *args, **kwargs):
         self.blog = get_object_or_404(Blog, unique_name=self.kwargs.get('blogname'))

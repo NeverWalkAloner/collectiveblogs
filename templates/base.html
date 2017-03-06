@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <title>Коллективные блоги {% block title %}{% endblock %}</title>
 </head>
-<script   src="http://code.jquery.com/jquery-1.12.4.min.js"
+<script   src="{% static 'js/jquery-1.12.4.min.js' %}"
           integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/marked.min.js' %}"></script>
 <script>
     $(document).ready(function(){
     $(".content-markdown").each(function(){
@@ -102,7 +101,7 @@
 {% block content %}
 {% endblock %}
 <nav class="footer">
-        <p align="center">Don't worry, be happy:)</p>
+        <p align="center">Да пребудет с тобой Сила.</p>
 </nav>
 </body>
 </html>
