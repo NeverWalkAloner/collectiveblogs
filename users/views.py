@@ -35,7 +35,7 @@ def registration_email(recipient, profile_url):
     )
 
 
-@periodic_task(run_every=(crontab(minute='*/2')), name='update_email', ignore_result=True)
+@periodic_task(run_every=(crontab(hour='*/24')), name='update_email', ignore_result=True)
 def update_email():
     emails = User.objects.filter(is_active=True).exclude(email='').values_list('email', flat=True)
     posts = Post.objects.filter(pub_date__gte=timezone.now() + timedelta(days=-1))
